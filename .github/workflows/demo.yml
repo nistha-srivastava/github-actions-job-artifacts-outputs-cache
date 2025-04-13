@@ -33,7 +33,7 @@ jobs:
       # Adding a job to download the artifacts generated from the runner for us tp access. Can be seen on workflow tile
       - name: Download build artifacts
         # Using a pre-defined action to download
-        uses: action/upload-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
           name: my-build-job-artifact
           path: dist
