@@ -11,10 +11,13 @@ jobs:
         uses: actions/checkout@v3
       - name: Install dependencies
         run: npm ci
+        working-directory: ./demo-project
       - name: Lint code
         run: npm run lint
+        working-directory: ./demo-project
       - name: Test code
         run: npm run test
+        working-directory: ./demo-project
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -23,8 +26,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Install dependencies
         run: npm ci
+        working-directory: ./demo-project
       - name: Build website
         run: npm run build
+        working-directory: ./demo-project
       # Adding a job to download the artifacts generated from the runner for us tp access. Can be seen on workflow tile
       - name: Download build artifacts
         # Using a pre-defined action to download
