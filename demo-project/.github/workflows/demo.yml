@@ -1,0 +1,49 @@
+name: Deploy website
+on:
+  push:
+    branches:
+      - main
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint code
+        run: npm run lint
+      - name: Test code
+        run: npm run test
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm ci
+      - name: Build website
+        run: npm run build
+      # Adding a job to download the artifacts generated from the runner for us tp access. Can be seen on workflow tile
+      - name: Download build artifacts
+        # Using a pre-defined action to download
+        uses: action/upload-artifact@v4
+        with:
+          name: my-build-job-artifact
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: echo "Deploying..."
+      # If "dist" is your folder, on this runner you will get content inside dist, not the dist folder itself - so no need to navigate into the folder name.
+      - name: Access the build artifacts content
+        # Using a pre-defined action to download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          # Name of the artifact should match with one of the artifacts uploaded
+          name: my-build-job-artifact 
+      - name: Print content inside downloaded artifacts
+        run: ls
